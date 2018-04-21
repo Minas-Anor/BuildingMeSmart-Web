@@ -29,7 +29,12 @@ def get_parking():
 def add(p, u = -1):
     conn = sqlite3.connect('parking.db')
     cur = conn.cursor()
-    cur.execute("insert into parkings(u_id, p_id, filled) values(?,?,?)", (u, p, 0))
+    cur.execute("select * from parkings where p_id = ?", (p,))
+    data = cur.fetchone()
+    if data:
+        if len(data) > 0:
+            return "Already exists"
+    cur.execute("insert into parkings(u_id, p_id, filled) values(?,?,?)", (u, p, 0,))
     conn.commit()
     conn.close()
     return "Success"
@@ -48,7 +53,7 @@ def fill_parking(parking_id, user_id):
     if data:
         if data[2] == 1:
             return "Already filled"
-    cur.execute("update parkings set u_id = ?, filled = ? where p_id = ?", (user_id, 1, parking_id))
+    cur.execute("update parkings set u_id = ?, filled = ? where p_id = ?", (user_id, 1, parking_id,))
     conn.commit()
     conn.close()
     return "Success"
