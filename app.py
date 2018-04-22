@@ -23,7 +23,7 @@ def get_parking():
     cur.execute("select * from parkings")
     data = cur.fetchall()
     conn.close()
-    return jsonify(data)
+    return jsonify({'data': data})
 
 @app.route("/parking/add/<int:p>/<int:u>")
 def add(p, u = -1):
@@ -76,7 +76,7 @@ def find_parking(user_id, current_position = ""):
     data = cur.fetchone()
     conn.close()
     if len(data) > 0:
-        return jsonify(data)
+        return jsonify(data[0])
     else:
         return "Not found"
     # navigate current_position to parking_id
